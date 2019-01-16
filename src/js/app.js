@@ -39,8 +39,7 @@ class App extends React.Component {
       if (user) {
 
         let articles = dbCollectionArticles
-                        .orderBy('created')
-                        .limit(3);
+                        .orderBy('created');
 
         articles.onSnapshot((docSnapShot) => {
 
