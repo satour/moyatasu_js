@@ -1,8 +1,9 @@
 import React from 'react';
 import {db, auth, provider, fieldValue} from './firebase';
-import Header from '../components/Header';
-import ArticleForm from '../components/Article/ArticleForm';
-import ArticleList from '../components/Article/ArticleList';
+import Logo from '../components/Header/Logo';
+import LoginLogoutButton from '../components/Header/LoginLogoutButton';
+import FormArticle from '../components/Form/FormArticle';
+import ArticleList from '../components/Feed/CollectionArticle/ArticleList';
 
 const dbCollectionArticles = db.collection("messages");
 const dbCollectionComments = db.collection("comments");
@@ -16,24 +17,76 @@ class App extends React.Component {
     }
   }
 
+
+  // Auth Methods
+  login = (e) => {
+    auth.signInWithPopup(provider);
+  }
+
+  logout = (e) => {
+    auth.signOut();
+  }
+
+  // State Methods
+  handleChange = (e) => {
+    const t = e.target;
+    this.state[t.name] = t.value;
+  }
+
+  // Component Methods
+  componentWillMount() { //"App" component の Mount 時に実行される
+    auth.onAuthStateChanged(user => { //ログインした直後
+      if (user) {
+
+        let articles = dbCollectionArticles
+                        .orderBy('created')
+                        .limit(3);
+
+        articles.onSnapshot((docSnapShot) => {
+
+          let comments = dbCollectionComments
+                          .orderBy('created');
+            
+          comments.get()
+              .then(querySnapshot => {
+                const dataCommentsHash = this._generateCommentsHash(querySnapshot);
+                return dataCommentsHash
+              })
+              .then(dataCommentsHash => {
+                const articles = this._buildArticles(docSnapShot, dataCommentsHash)
+                this.setState({ articles, loaded: true, me: user });
+            });
+        })
+      } else {
+        this.setState({
+          me: null
+        })
+      }
+    });
+  }
+
   // Article Methods
   addArticle = (e) => {
     e.preventDefault();
-
+  
     const article = this.state.article
     if (!article) { return; }
-
+  
     this._clearState('article');
     this._focusSubmit();
-
+  
+    let query = {
+      message:      article,
+      created:      fieldValue.serverTimestamp(),
+      updated:      fieldValue.serverTimestamp(),
+      uid:          this.state.me ? this.state.me.uid : 'nobody',
+      displayName:  this.state.me ? this.state.me.displayName : 'noname'
+    }
+  
     const ref = dbCollectionArticles.doc();
-    ref.set({
-      message: article,
-      created: fieldValue.serverTimestamp(),
-      updated: fieldValue.serverTimestamp(),
-      uid: this.state.me ? this.state.me.uid : 'nobody',
-      displayName: this.state.me ? this.state.me.displayName : 'noname'
-    }).then(function(docRef) {
+
+    ref.set(query)
+    .then(function(docRef) {
       console.log(docRef);
     }).catch(function(error) {
       console.error("Error adding document: ", error);
@@ -87,8 +140,8 @@ class App extends React.Component {
     if(window.confirm('本当に削除しますか？')){
       const commentId = e.target.value;
       const articleId = e.target.dataset.articleId;
-      const article = dbCollectionArticles.doc(articleId);
-      const comment = dbCollectionComments.doc(commentId);
+      const article   = dbCollectionArticles.doc(articleId);
+      const comment   = dbCollectionComments.doc(commentId);
 
       comment.delete().then(function() {
         article.update({
@@ -102,47 +155,6 @@ class App extends React.Component {
         console.error("Error removeing comment: ", error);
       });
     }
-  }
-
-  // Auth Methods
-  login = (e) => {
-    auth.signInWithPopup(provider);
-  }
-
-  logout = (e) => {
-    auth.signOut();
-  }
-
-  // State Methods
-  handleChange = (e) => {
-    const t = e.target;
-    this.state[t.name] = t.value;
-  }
-
-  // Component Methods
-  componentWillMount() {
-    auth.onAuthStateChanged(user => {
-      if (user) {
-        dbCollectionArticles.orderBy('created').onSnapshot((docSnapShot) => {
-          dbCollectionComments.orderBy('created').get().then(querySnapshot => {
-            const dataCommentsHash = this._generateCommentsHash(querySnapshot);
-            return dataCommentsHash
-          }).then(commentsHash => {
-            const articles = this._buildArticles(docSnapShot, commentsHash)
-
-            this.setState({
-              articles,
-              loaded: true,
-              me: user
-            });
-          });
-        })
-      } else {
-        this.setState({
-          me: null
-        })
-      }
-    });
   }
 
   // Private Methods
@@ -197,11 +209,15 @@ class App extends React.Component {
       return articles;
     }
 
+    _renderLogo(){
+      return Logo;
+    }
+
     // render ()
     _renderContent() {
       return (
         <section className="moya__container">
-          <ArticleForm
+          <FormArticle
             addArticle={this.addArticle}
             handleChange={this.handleChange}
             stateArticle={this.state.article}
@@ -223,7 +239,10 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
-        <Header login={this.login} logout={this.logout} stateMe={this.state.me}/>
+        <header className="moya__header">
+          <Logo logo={this._renderLogo()} />
+          <LoginLogoutButton login={this.login} logout={this.logout} stateMe={this.state.me}/>
+        </header>
         {this.state.me && this._renderContent()}
       </div>
     )

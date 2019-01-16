@@ -8,16 +8,25 @@ import ExpandCollapse from 'react-expand-collapse';
 import CommentList from '../Comment/CommentList'
 import CommentForm from '../Comment/CommentForm'
 
-const remarkProcessor = remark().use(reactRenderer).use(remarkBreaks).use(remarkExternalLinks);
+const remarkProcessor = remark()
+                        .use(reactRenderer)
+                        .use(remarkBreaks)
+                        .use(remarkExternalLinks);
 
 const Article = ({
-  article, articlesLength, index,
-  deleteArticle, addComment, deleteComment, handleChange,
-  stateMeUid, stateComment
+  article,
+  articlesLength,
+  index,
+  deleteArticle,
+  addComment,
+  deleteComment,
+  handleChange,
+  stateMeUid,
+  stateComment
 }) => {
-  const imageIndex = ((articlesLength - index) % 45) + 1;
-  const imagePath = `images/${imageIndex}.gif`;
-  const created = article.created ?
+  const imageIndex  = ((articlesLength - index) % 45) + 1;
+  const imagePath   = `images/${imageIndex}.gif`;
+  const created     = article.created ?
     DayJS.unix(article.created.seconds).format('YYYY-MM-DD HH:mm:ss') :
     DayJS(new Date()).format('YYYY-MM-DD HH:mm:ss');
   const deleteButton = article.uid === stateMeUid ?

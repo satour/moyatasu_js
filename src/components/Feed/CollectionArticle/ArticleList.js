@@ -1,11 +1,16 @@
 import React from 'react'
-import Article from '../Article/Article'
+import Article from './Article/Article'
 
 const ArticleList = ({
   articles,
-  deleteArticle, addComment, deleteComment, handleChange,
-  state, stateMeUid
+  deleteArticle,
+  addComment,
+  deleteComment,
+  handleChange,
+  state,
+  stateMeUid
 }) => {
+
   const articlesLength = articles.length;
 
   return (

@@ -1,8 +1,9 @@
 import React from 'react'
 import Textarea from 'react-textarea-autosize';
 
-const ArticleForm = ({
-  addArticle, handleChange,
+const FormArticle = ({
+  addArticle,
+  handleChange,
   stateArticle
 }) => {
   return (
@@ -23,4 +24,4 @@ const ArticleForm = ({
   )
 }
 
-export default ArticleForm
+export default FormArticle
