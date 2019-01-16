@@ -3,7 +3,7 @@ import {db, auth, provider, fieldValue} from './firebase';
 import Logo from '../components/Header/Logo';
 import LoginLogoutButton from '../components/Header/LoginLogoutButton';
 import FormArticle from '../components/Form/FormArticle';
-import ArticleList from '../components/Feed/CollectionArticle/ArticleList';
+import Feed from '../components/Feed/Feed/Feed';
 
 const dbCollectionArticles = db.collection("messages");
 const dbCollectionComments = db.collection("comments");
@@ -222,7 +222,7 @@ class App extends React.Component {
             handleChange={this.handleChange}
             stateArticle={this.state.article}
           />
-          <ArticleList
+          <Feed
             articles={this.state.articles.slice()}
             deleteArticle={this.deleteArticle}
             addComment={this.addComment}

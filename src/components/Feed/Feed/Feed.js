@@ -1,7 +1,7 @@
 import React from 'react'
 import Article from './Article/Article'
 
-const ArticleList = ({
+const Feed = ({
   articles,
   deleteArticle,
   addComment,
@@ -33,4 +33,4 @@ const ArticleList = ({
   )
 }
 
-export default ArticleList
+export default Feed
