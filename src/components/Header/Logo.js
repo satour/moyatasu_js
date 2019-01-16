@@ -9,5 +9,4 @@ const Logo = () => {
       </h1>
   )
 }
-//MOYAMOYA GUGUTASU の文字とログイン機能（ログイン/ログアウトボタン）は別クラスにしたいね。
 export default Logo
