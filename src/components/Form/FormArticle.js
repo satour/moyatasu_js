@@ -18,7 +18,8 @@ const FormArticle = ({
         value={stateArticle}
       />
       <div className="moya__form__submit">
-        <button type="submit" id="submit" onClick={addArticle}>Submit</button>
+          <button type="buttnon" id="BtnAttachImage">画像を添付</button>
+          <button type="submit" id="submit" onClick={addArticle}>Submit</button>
       </div>
     </form>
   )

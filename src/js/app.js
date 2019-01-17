@@ -3,7 +3,7 @@ import {db, auth, provider, fieldValue} from './firebase';
 import Logo from '../components/Header/Logo';
 import LoginLogoutButton from '../components/Header/LoginLogoutButton';
 import FormArticle from '../components/Form/FormArticle';
-import Feed from '../components/Feed/Feed/Feed';
+import Feed from '../components/Feed/Feed/Feed.js';
 
 const dbCollectionArticles = db.collection("messages");
 const dbCollectionComments = db.collection("comments");

@@ -1,7 +1,13 @@
+import React from 'react'
+import Article from './Article/Article'
+import Feed from '../Feed/Feed'
+
+const readMoreArticles = () => {
+
+}
+
 const ReadMoreButton = ({
-  readMoreArticles,
-  handleChange,
-  stateArticle
+  readMoreArticles
 }) => {
   return (
       <div className="moya__form__submit">

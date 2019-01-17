@@ -5,8 +5,8 @@ import reactRenderer from 'remark-react'
 import remarkBreaks from 'remark-breaks'
 import remarkExternalLinks from 'remark-external-links'
 import ExpandCollapse from 'react-expand-collapse';
-import CommentList from '../Comment/CommentList'
-import CommentForm from '../Comment/CommentForm'
+import CommentList from './Comment/CommentList'
+import CommentForm from './Comment/CommentForm'
 
 const remarkProcessor = remark()
                         .use(reactRenderer)
